@@ -30,9 +30,15 @@ async function run() {
     // await client.connect();
 
     app.get("/gadgets", async (req,res)=>{
+      const page = parseInt(req.query.page)
+      const size = parseInt(req.query.size)
+      console.log(page, size);
+      
 
 
-      const result = await gadgetsCollection.find().toArray()
+
+
+      const result = await gadgetsCollection.find().skip(page*size).limit(size).toArray()
       res.send(result)
       
     })
