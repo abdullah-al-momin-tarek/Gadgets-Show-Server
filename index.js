@@ -32,13 +32,19 @@ async function run() {
     app.get("/gadgets", async (req,res)=>{
       const page = parseInt(req.query.page)
       const size = parseInt(req.query.size)
-      console.log(page, size);
+
+      let query = {};
+
+      if (req.query.search) {
+        const searchRegex = new RegExp(req.query.search, 'i');
+        query = { ...query, name: { $regex: searchRegex } };
+        console.log(searchRegex);
+        
+      }
+
+      //  const query = search ? { name: { $regex: search, $options: "i" } } : {};
       
-
-
-
-
-      const result = await gadgetsCollection.find().skip(page*size).limit(size).toArray()
+      const result = await gadgetsCollection.find(query).skip(page*size).limit(size).toArray()
       res.send(result)
       
     })
