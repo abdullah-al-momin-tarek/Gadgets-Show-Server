@@ -33,9 +33,14 @@ async function run() {
 
 
       const result = await gadgetsCollection.find().toArray()
-      console.log(result);
       res.send(result)
       
+    })
+
+    app.get("/gadgetsCount", async(req,res)=>{
+      const count = await gadgetsCollection.estimatedDocumentCount()
+      
+      res.send({count})
     })
 
 
