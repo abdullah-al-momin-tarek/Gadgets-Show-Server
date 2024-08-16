@@ -34,17 +34,28 @@ async function run() {
       const size = parseInt(req.query.size)
 
       let query = {};
+      let sortOptions = {};
 
-      if (req.query.search) {
+      if (req.query.search ) {
         const searchRegex = new RegExp(req.query.search, 'i');
         query = { ...query, name: { $regex: searchRegex } };
-        console.log(searchRegex);
-        
+        console.log(query);
       }
-
-      //  const query = search ? { name: { $regex: search, $options: "i" } } : {};
+      console.log("this", query);
       
-      const result = await gadgetsCollection.find(query).skip(page*size).limit(size).toArray()
+
+      if (req.query.priceOrder) {
+        if (req.query.priceOrder === "lowToHigh") {
+          sortOptions.price = 1; 
+        } else if (req.query.priceOrder === "highToLow") {
+          sortOptions.price = -1; 
+        }
+    }
+
+    console.log('sort', sortOptions);
+    
+      
+      const result = await gadgetsCollection.find(query).sort(sortOptions).skip(page*size).limit(size).toArray()
       res.send(result)
       
     })
