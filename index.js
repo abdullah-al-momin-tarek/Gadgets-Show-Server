@@ -41,7 +41,6 @@ async function run() {
         query = { ...query, name: { $regex: searchRegex } };
         console.log(query);
       }
-      console.log("this", query);
       
 
       if (req.query.priceOrder) {
@@ -52,7 +51,16 @@ async function run() {
         }
     }
 
-    console.log('sort', sortOptions);
+    if(req.query.dateSort){
+      if(req.query.dateSort === "newestFirst"){
+        sortOptions.createdAt= -1;
+      }
+      else if(req.query.dateSort === "oldestFirst"){
+        sortOptions.createdAt= 1;
+      }
+    }
+
+    console.log("this is test",sortOptions, req.query.dateSort);
     
       
       const result = await gadgetsCollection.find(query).sort(sortOptions).skip(page*size).limit(size).toArray()
