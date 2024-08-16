@@ -30,19 +30,21 @@ async function run() {
     // await client.connect();
 
     app.get("/gadgets", async (req,res)=>{
+      try{
       const page = parseInt(req.query.page)
       const size = parseInt(req.query.size)
 
       let query = {};
       let sortOptions = {};
 
+      // search
       if (req.query.search ) {
         const searchRegex = new RegExp(req.query.search, 'i');
         query = { ...query, name: { $regex: searchRegex } };
         console.log(query);
       }
       
-
+      // price
       if (req.query.priceOrder) {
         if (req.query.priceOrder === "lowToHigh") {
           sortOptions.price = 1; 
@@ -50,7 +52,7 @@ async function run() {
           sortOptions.price = -1; 
         }
     }
-
+    // date
     if(req.query.dateSort){
       if(req.query.dateSort === "newestFirst"){
         sortOptions.createdAt= -1;
@@ -60,11 +62,28 @@ async function run() {
       }
     }
 
+    // Category
+    if(req.query.category){
+      if(req.query.category === "Watch"){
+        query.category = req.query.category;
+      }
+      else if(req.query.category === "Mobile"){
+        query.category = req.query.category;
+      }
+    }
+
+
     console.log("this is test",sortOptions, req.query.dateSort);
     
       
       const result = await gadgetsCollection.find(query).sort(sortOptions).skip(page*size).limit(size).toArray()
-      res.send(result)
+      res.send(result)}
+      catch{
+        res.status(500).send({
+          message: "Something went wrong",
+          error: error.message
+      });
+      }
       
     })
 
