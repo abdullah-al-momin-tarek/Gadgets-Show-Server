@@ -10,10 +10,11 @@ app.use(cors())
 app.use(express.json())
 
 const uri = process.env.DB_URI
+console.log(uri);
 
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
+const client = new MongoClient(uri, { 
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -21,13 +22,13 @@ const client = new MongoClient(uri, {
   }
 });
 
-const database = client.db("gadgetsDB");
-const gadgetsCollection = database.collection("gadgetsCollection")
+const database = client.db("gadgetsTest");
+const gadgetsTestCollection = database.collection("gadgetsTestCollection")
 
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
+    await client.connect();
 
     app.get("/gadgets", async (req,res)=>{
       try{
@@ -76,30 +77,45 @@ async function run() {
     if(req.query.brand){
       if(req.query.brand === "All"){
         console.log("Nothing");
-        
       }
       else{
         query.brand = req.query.brand;
       }
     }
 
+    
 
-    console.log("this is test",sortOptions, req.query.dateSort);
+    // Price Range
+    if(req.query.priceRange){
+      if(req.query.priceRange === "50to199"){
+        query = { ...query, price: { $gte: 50, $lte: 199 } };
+    } else if(req.query.priceRange === "200to399"){
+        query = { ...query, price: { $gte: 200, $lte: 399 } };
+    } else if(req.query.priceRange === "400to599"){
+        query = { ...query, price: { $gte: 400, $lte: 599 } };
+    } else if(req.query.priceRange === "600to799"){
+        query = { ...query, price: { $gte: 600, $lte: 799 } };
+    } else if(req.query.priceRange === "800to1000"){
+        query = { ...query, price: { $gte: 800 } };
+    }
+    
+    }
+
+
     
       
-      const result = await gadgetsCollection.find(query).sort(sortOptions).skip(page*size).limit(size).toArray()
+      const result = await gadgetsTestCollection.find(query).sort(sortOptions).skip(page*size).limit(size).toArray()
       res.send(result)}
-      catch{
+      catch (error){
         res.status(500).send({
-          message: "Something went wrong",
-          error: error.message
+          message: error.message,
       });
       }
       
     })
 
     app.get("/gadgetsCount", async(req,res)=>{
-      const count = await gadgetsCollection.estimatedDocumentCount()
+      const count = await gadgetsTestCollection.estimatedDocumentCount()
       
       res.send({count})
     })
@@ -108,7 +124,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
+    await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
