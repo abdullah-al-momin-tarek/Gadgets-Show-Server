@@ -72,6 +72,17 @@ async function run() {
       }
     }
 
+    // Brand
+    if(req.query.brand){
+      if(req.query.brand === "All"){
+        console.log("Nothing");
+        
+      }
+      else{
+        query.brand = req.query.brand;
+      }
+    }
+
 
     console.log("this is test",sortOptions, req.query.dateSort);
     
