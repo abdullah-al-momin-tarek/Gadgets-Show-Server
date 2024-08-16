@@ -7,7 +7,10 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // middleware
 app.use(cors({
-  origin: ['gadgets-show.web.app', 'gadgets-show.firebaseapp.com', 'http://localhost:5173']
+  origin: ['gadgets-show.web.app', 'gadgets-show.firebaseapp.com', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }))
 app.use(express.json())
 
