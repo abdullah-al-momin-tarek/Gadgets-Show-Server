@@ -113,12 +113,7 @@ async function run() {
       }
       
     })
-
-    app.get("/gadgetsCount", async(req,res)=>{
-      const count = await gadgetsTestCollection.estimatedDocumentCount()
-      
-      res.send({count})
-    })
+    
 
 
 
