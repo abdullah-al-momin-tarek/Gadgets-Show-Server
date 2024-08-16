@@ -6,6 +6,9 @@ const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // middleware
+app.use(cors({
+  origin: ['gadgets-show.web.app', 'gadgets-show.firebaseapp.com', 'http://localhost:5173']
+}))
 app.use(express.json())
 
 const uri = process.env.DB_URI
