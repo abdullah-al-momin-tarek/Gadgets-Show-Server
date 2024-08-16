@@ -1,12 +1,12 @@
 # Gadgets Show Server
 ## Project Setup
 
-# Clone the repository:
+### Clone the repository:
 ```
 https://github.com/abdullah-al-momin-tarek/Gadgets-Show-Server
 cd Gadgets-Show-Server
 ```
-# Install dependencies
+### Install dependencies
 Ensure that you have Node.js installed.
 ```
 npm install
@@ -18,7 +18,7 @@ DB_URI=<Your MongoDB connection string>
 ```
 Replace <Your MongoDB connection string> with your actual MongoDB URI.
 
-# Start the server: 
+### Start the server: 
 ```
 npm start
 ```
